@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-BOS Mission Control</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      text-align: center;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 3rem;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white;
+    }
+    h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .status-badge {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      background: rgba(0,200,83,0.2);
+      border: 1px solid #00c853;
+      color: #00c853;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+    .endpoints {
+      margin-top: 2rem;
+      text-align: left;
+    }
+    .endpoint {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-family: monospace;
+      font-size: 0.85rem;
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .method {
+      color: #00d2ff;
+      font-weight: bold;
+      min-width: 4rem;
+    }
+    .path { color: #ddd; }
+    .desc { color: #888; margin-left: auto; }
+    a { color: #00d2ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .stat-num {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00d2ff;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 0.25rem;
+    }
+    .footer { margin-top: 2rem; font-size: 0.75rem; color: #555; }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <div class="logo">A</div>
+    <h1>AI-BOS<br>Mission Control</h1>
+    <p style="color: #888; margin-bottom: 0.5rem;">Autonomous AI Operations System</p>
+    <div class="status-badge">System Online</div>
+    <div class="stats" id="stats">
+      <div class="stat-card"><div class="stat-num" id="stat-tasks">-</div><div class="stat-label">Open Tasks</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-deals">-</div><div class="stat-label">Active Deals</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-revenue">-</div><div class="stat-label">Revenue</div></div>
+    </div>
+    <div class="endpoints">
+      <div class="endpoint"><span class="method">GET</span> <span class="path"><a href="/api/dashboard">/api/dashboard</a></span> <span class="desc">Live summary</span></div>
+      <div class="endpoint"><span class="method">GET</span> <span class="path"><a href="/api/tasks">/api/tasks</a></span> <span class="desc">All tasks</span></div>
+      <div class="endpoint"><span class="method">GET</span> <span class="path"><a href="/api/deals">/api/deals</a></span> <span class="desc">Deal pipeline</span></div>
+      <div class="endpoint"><span class="method">GET</span> <span class="path"><a href="/api/invoices">/api/invoices</a></span> <span class="desc">Invoices</span></div>
+      <div class="endpoint"><span class="method">GET</span> <span class="path">/api/reminders</span> <span class="desc">Reminders</span></div>
+      <div class="endpoint"><span class="method">POST</span> <span class="path">/api/chat</span> <span class="desc">Chat</span></div>
+    </div>
+    <div class="footer">AI-BOS v2.0</div>
+  </div>
+  <script>
+    fetch('/api/dashboard')
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById('stat-tasks').textContent = d.tasks.total;
+        document.getElementById('stat-deals').textContent = d.deals.total;
+        document.getElementById('stat-revenue').textContent = '$' + d.revenue;
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>
