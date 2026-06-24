@@ -415,8 +415,8 @@ app.get('/api/agents', (req, res) => {
 
 // ─── Start ────────────────────────────────────────────────
 
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`🖥️  AI-BOS Mission Control Dashboard running on http://127.0.0.1:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🖥️  AI-BOS Mission Control Dashboard running on http://0.0.0.0:${PORT}`);
   console.log(`   Endpoints:`);
   console.log(`   GET  /api/health      — Health check`);
   console.log(`   GET  /api/dashboard   — Dashboard summary`);

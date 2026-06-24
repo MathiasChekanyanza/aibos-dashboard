@@ -1,145 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI-BOS Mission Control</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
-      color: #e0e0e0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    .container {
-      max-width: 600px;
-      text-align: center;
-      background: rgba(255,255,255,0.05);
-      border-radius: 20px;
-      padding: 3rem;
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
-    .logo {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.5rem;
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: white;
-    }
-    h1 {
-      font-size: 2.5rem;
-      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-      line-height: 1.2;
-    }
-    .status-badge {
-      display: inline-block;
-      margin-top: 1.5rem;
-      padding: 0.5rem 1.5rem;
-      border-radius: 50px;
-      background: rgba(0,200,83,0.2);
-      border: 1px solid #00c853;
-      color: #00c853;
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 0.85rem;
-      letter-spacing: 1px;
-    }
-    .endpoints {
-      margin-top: 2rem;
-      text-align: left;
-    }
-    .endpoint {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-family: monospace;
-      font-size: 0.85rem;
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-    .method {
-      color: #00d2ff;
-      font-weight: bold;
-      min-width: 4rem;
-    }
-    .path { color: #ddd; }
-    .desc { color: #888; margin-left: auto; }
-    a { color: #00d2ff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .stat-card {
-      background: rgba(255,255,255,0.03);
-      border-radius: 12px;
-      padding: 1rem;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .stat-num {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #00d2ff;
-    }
-    .stat-label {
-      font-size: 0.7rem;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-top: 0.25rem;
-    }
-    .footer { margin-top: 2rem; font-size: 0.75rem; color: #555; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI-BOS Mission Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a1a;--glass:rgba(255,255,255,0.04);--gb:rgba(255,255,255,0.08);--blur:24px;--accent:#00d2ff;--accent2:#3a7bd5;--grad:linear-gradient(135deg,#00d2ff,#3a7bd5);--green:#00c853;--orange:#ff9100;--red:#ff1744;--purple:#b388ff;--text:#f0f0f8;--t2:#8989a8;--t3:#5a5a7a;--r:14px}
+html{font-size:16px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;background-image:radial-gradient(ellipse 600px 400px at 10% 20%,rgba(0,210,255,0.06) 0%,transparent 70%),radial-gradient(ellipse 500px 500px at 90% 80%,rgba(58,123,213,0.05) 0%,transparent 70%)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+.glass{background:var(--glass);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--gb);border-radius:var(--r);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.c{max-width:1440px;margin:0 auto;padding:1.5rem}
+/* Header */
+.hd{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;margin-bottom:1.5rem;background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06);border-radius:28px}
+.hl{display:flex;align-items:center;gap:1rem}
+.logo{width:42px;height:42px;background:var(--grad);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:#fff}
+.ht h1{font-size:1.25rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ht span{font-size:0.75rem;color:var(--t3)}
+.hr{display:flex;align-items:center;gap:1.5rem}
+.st{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--t2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 6px var(--green)}50%{opacity:0.6;box-shadow:0 0 12px var(--green)}}
+.ver{font-size:0.7rem;color:var(--t3);padding:0.25rem 0.75rem;border:1px solid rgba(255,255,255,0.08);border-radius:50px}
+.clock{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--t2)}
+.bi{width:36px;height:36px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;background:transparent;color:var(--t2);cursor:pointer;transition:.2s;font-size:1rem;display:inline-flex;align-items:center;justify-content:center}
+.bi:hover{background:rgba(255,255,255,0.08);color:var(--text)}
+/* Stats */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.s{padding:1.25rem 1.5rem;position:relative;overflow:hidden}
+.s::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.s.tk::before{background:var(--accent)}
+.s.dl::before{background:var(--purple)}
+.s.rv::before{background:var(--green)}
+.s.od::before{background:var(--orange)}
+.si{font-size:1.2rem;margin-bottom:0.5rem}
+.sv{font-size:2rem;font-weight:800;letter-spacing:-0.5px}
+.s.tk .sv{color:var(--accent)}
+.s.dl .sv{color:var(--purple)}
+.s.rv .sv{color:var(--green)}
+.s.od .sv{color:var(--orange)}
+.sl{font-size:0.75rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.8px;margin-top:0.15rem}
+.ss{font-size:0.7rem;color:var(--t2);margin-top:0.25rem}
+/* Banner */
+.ob{padding:0.75rem 1rem;background:rgba(255,23,68,0.08);border:1px solid rgba(255,23,68,0.2);border-radius:8px;margin-bottom:1rem;font-size:0.8rem;color:var(--red);display:none;align-items:center;gap:0.5rem}
+.ob.s{display:flex}
+/* Grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.p{padding:1.5rem}
+.pt{font-size:0.8rem;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between}
+.pt .bc{font-size:0.7rem;color:var(--t2);background:rgba(255,255,255,0.06);padding:0.15rem 0.6rem;border-radius:50px}
+/* Tasks */
+.tl{display:flex;flex-direction:column;gap:0.6rem}
+.ti{display:flex;align-items:flex-start;gap:0.75rem;padding:0.75rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04);transition:.2s;cursor:pointer}
+.ti:hover{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.08)}
+.tc{width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-radius:50%;cursor:pointer;flex-shrink:0;margin-top:2px;transition:.2s}
+.tc:hover{border-color:var(--accent)}
+.tc.d{background:var(--green);border-color:var(--green);display:flex;align-items:center;justify-content:center}
+.tc.d::after{content:'\2713';color:#fff;font-size:11px;font-weight:700}
+.tco{flex:1;min-width:0}
+.tt{font-size:0.85rem;font-weight:500;line-height:1.4;display:flex;align-items:center;gap:0.5rem}
+.tt.dt{text-decoration:line-through;opacity:0.5}
+.tp{font-size:0.6rem;font-weight:700;padding:0.15rem 0.45rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px}
+.tp.p5{background:rgba(0,210,255,0.15);color:var(--accent)}
+.tp.p4{background:rgba(179,136,255,0.15);color:var(--purple)}
+.tp.p3{background:rgba(255,145,0,0.15);color:var(--orange)}
+.tdu{font-size:0.7rem;color:var(--t3);margin-top:0.2rem}
+.tdu.od{color:var(--red)}
+.tdu.td{color:var(--orange)}
+.tde{font-size:0.75rem;color:var(--t2);margin-top:0.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Deals */
+.tw{width:100%;border-collapse:collapse}
+.th{text-align:left;font-size:0.7rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.8px;padding:0.5rem 0.75rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+td{padding:0.75rem;font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.03)}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.ds{font-size:0.7rem;padding:0.2rem 0.6rem;border-radius:50px;font-weight:600}
+.ds.new{background:rgba(0,210,255,0.15);color:var(--accent)}
+.ds.active{background:rgba(0,200,83,0.15);color:var(--green)}
+.ds.stalled{background:rgba(255,145,0,0.15);color:var(--orange)}
+.ds.closed{background:rgba(255,255,255,0.1);color:var(--t3)}
+.dv{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--green)}
+/* Health */
+.hrw{display:flex;justify-content:space-between;margin-bottom:0.6rem}
+.hrw span{font-size:0.85rem}
+.hlb{color:var(--t2)}
+.hvl{color:var(--green)}
+.hvl.off{color:var(--t3)}
+.bar{width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-top:0.5rem}
+.fill{height:100%;border-radius:3px;background:var(--grad);transition:width 1s ease}
+/* Activity */
+.al{display:flex;flex-direction:column;gap:0.6rem}
+.ai{display:flex;align-items:flex-start;gap:0.7rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.ai:last-child{border-bottom:none}
+.ad{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.ad.sy{background:var(--accent)}
+.ad.ts{background:var(--purple)}
+.ad.fi{background:var(--green)}
+.ad.al{background:var(--orange)}
+.at{font-size:0.8rem;color:var(--t2);flex:1}
+.atm{font-size:0.65rem;color:var(--t3);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+/* Actions */
+.ax{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem}
+.qb{padding:0.75rem;border:1px solid rgba(255,255,255,0.06);border-radius:8px;background:rgba(255,255,255,0.02);color:var(--t2);cursor:pointer;font-family:'Inter',sans-serif;font-size:0.8rem;text-align:center;transition:.2s}
+.qb:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:var(--text);transform:translateY(-1px)}
+.qb .e{display:block;font-size:1.2rem;margin-bottom:0.25rem}
+/* Pulse Chart */
+.pch{display:flex;align-items:flex-end;gap:0.5rem;height:80px;padding-top:0.5rem}
+.pb{flex:1;border-radius:3px 3px 0 0;background:var(--grad);opacity:0.7;transition:height 1s ease;min-height:4px;position:relative}
+.pb:hover{opacity:1}
+.pbl{font-size:0.55rem;color:var(--t3);text-align:center;margin-top:0.2rem}
+/* Modal */
+.ov{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);z-index:100;align-items:center;justify-content:center}
+.ov.s{display:flex}
+.mo{max-width:500px;width:90%;padding:2rem}
+.mo h2{font-size:1.2rem;margin-bottom:1.25rem}
+.mo input,.mo textarea,.mo select{width:100%;padding:0.75rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.85rem;margin-bottom:0.75rem;outline:none;transition:.2s}
+.mo input:focus,.mo textarea:focus{border-color:var(--accent)}
+.mo textarea{resize:vertical;min-height:80px}
+.ma{display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1rem}
+.btn{padding:0.6rem 1.5rem;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:.2s}
+.bp{background:var(--grad);color:#fff}
+.bp:hover{opacity:0.9;transform:translateY(-1px)}
+.bs{background:rgba(255,255,255,0.06);color:var(--t2);border:1px solid rgba(255,255,255,0.1)}
+.bs:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+/* Empty */
+.emp{text-align:center;padding:2rem;color:var(--t3)}
+.emp .e2{font-size:2rem;margin-bottom:0.5rem}
+.emp p{font-size:0.85rem}
+/* Toast */
+.tsc{position:fixed;bottom:2rem;right:2rem;z-index:200;display:flex;flex-direction:column;gap:0.5rem}
+.toast{padding:0.75rem 1.25rem;border-radius:8px;background:rgba(17,17,40,0.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);color:var(--text);font-size:0.85rem;animation:si .3s ease;max-width:350px}
+@keyframes si{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@media(max-width:1024px){.sg{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.g3{grid-template-columns:1fr}}
+@media(max-width:600px){.sg{grid-template-columns:1fr 1fr}.hd{flex-direction:column;gap:1rem;align-items:flex-start}.hr{width:100%;justify-content:space-between}.c{padding:1rem}}
+.sp{margin-top:1.5rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:1rem}
+</style>
 </head>
 <body>
-  <div class="container" id="app">
-    <div class="logo">A</div>
-    <h1>AI-BOS<br>Mission Control</h1>
-    <p style="color: #888; margin-bottom: 0.5rem;">Autonomous AI Operations System</p>
-    <div class="status-badge">System Online</div>
-    <div class="stats" id="stats">
-      <div class="stat-card"><div class="stat-num" id="stat-tasks">-</div><div class="stat-label">Open Tasks</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-deals">-</div><div class="stat-label">Active Deals</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-revenue">-</div><div class="stat-label">Revenue</div></div>
+<div class="c">
+
+  <!-- Header -->
+  <header class="hd">
+    <div class="hl">
+      <div class="logo">A</div>
+      <div class="ht"><h1>Mission Control</h1><span>AI-BOS Autonomous Operations</span></div>
     </div>
-    <div class="endpoints">
-      <div class="endpoint"><span class="method">GET</span> <span class="path"><a href="/api/dashboard">/api/dashboard</a></span> <span class="desc">Live summary</span></div>
-      <div class="endpoint"><span class="method">GET</span> <span class="path"><a href="/api/tasks">/api/tasks</a></span> <span class="desc">All tasks</span></div>
-      <div class="endpoint"><span class="method">GET</span> <span class="path"><a href="/api/deals">/api/deals</a></span> <span class="desc">Deal pipeline</span></div>
-      <div class="endpoint"><span class="method">GET</span> <span class="path"><a href="/api/invoices">/api/invoices</a></span> <span class="desc">Invoices</span></div>
-      <div class="endpoint"><span class="method">GET</span> <span class="path">/api/reminders</span> <span class="desc">Reminders</span></div>
-      <div class="endpoint"><span class="method">POST</span> <span class="path">/api/chat</span> <span class="desc">Chat</span></div>
+    <div class="hr">
+      <div class="st"><div class="dot"></div><span id="stTxt">Live</span></div>
+      <span class="ver">v2.0</span>
+      <span class="clock" id="liveTime">--:--:--</span>
+      <button class="bi" onclick="refreshAll()">&#x27F3;</button>
     </div>
-    <div class="footer">AI-BOS v2.0</div>
+  </header>
+
+  <!-- Stats -->
+  <div class="sg">
+    <div class="s glass tk"><div class="si">&#x1F4CB;</div><div class="sv" id="sTk">-</div><div class="sl">Open Tasks</div><div class="ss" id="sTkSub"></div></div>
+    <div class="s glass dl"><div class="si">&#x1F91D;</div><div class="sv" id="sDl">-</div><div class="sl">Active Deals</div><div class="ss" id="sDlSub"></div></div>
+    <div class="s glass rv"><div class="si">&#x1F4B0;</div><div class="sv" id="sRv">$0</div><div class="sl">Monthly Revenue</div><div class="ss" id="sRvSub"></div></div>
+    <div class="s glass od"><div class="si">&#x26A0;&#xFE0F;</div><div class="sv" id="sOd">-</div><div class="sl">Overdue Items</div><div class="ss" id="sOdSub"></div></div>
   </div>
-  <script>
-    fetch('/api/dashboard')
-      .then(r => r.json())
-      .then(d => {
-        document.getElementById('stat-tasks').textContent = d.tasks.total;
-        document.getElementById('stat-deals').textContent = d.deals.total;
-        document.getElementById('stat-revenue').textContent = '$' + d.revenue;
-      })
-      .catch(() => {});
-  </script>
+
+  <!-- Banner -->
+  <div class="ob" id="ob"><span id="bnText">Some tasks need attention</span></div>
+
+  <!-- Main Grid -->
+  <div class="g2">
+    <div class="p glass">
+      <div class="pt"><span>&#x1F4CB; Tasks</span><button class="bi" onclick="sT()" style="width:28px;height:28px;font-size:0.8rem;display:inline-flex">+</button></div>
+      <div id="tl" class="tl"><div class="emp"><div class="e2">&#x1F4CB;</div><p>Loading tasks...</p></div></div>
+    </div>
+    <div class="p glass">
+      <div class="pt"><span>&#x1F91D; Deal Pipeline</span><button class="bi" onclick="sD()" style="width:28px;height:28px;font-size:0.8rem;display:inline-flex">+</button></div>
+      <div id="dl"><div class="emp"><div class="e2">&#x1F91D;</div><p>Loading deals...</p></div></div>
+    </div>
+  </div>
+
+  <!-- Bottom Grid -->
+  <div class="g3">
+    <div class="p glass">
+      <div class="pt">&#x2699;&#xFE0F; System Health</div>
+      <div id="sysH">
+        <div class="hrw"><span class="hlb">Dashboard API</span><span class="hvl">&#x25CF; Online</span></div>
+        <div class="hrw"><span class="hlb">Gateway</span><span class="hvl" id="gwSt">&#x25CF; Checking...</span></div>
+        <div class="hrw"><span class="hlb">Storage</span><span class="hvl off" id="stType">JSON files</span></div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--t3)">Task Completion</div>
+        <div class="bar"><div class="fill" id="taskPct" style="width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:0.3rem">
+          <span style="font-size:0.65rem;color:var(--t3)" id="progLbl">0/0 done</span>
+          <span style="font-size:0.65rem;color:var(--t3)" id="progPct">0%</span>
+        </div>
+      </div>
+    </div>
+    <div class="p glass">
+      <div class="pt">&#x1F4E1; Activity Log</div>
+      <div id="al" class="al">
+        <div class="ai"><div class="ad sy"></div><span class="at">Dashboard loaded</span><span class="atm">now</span></div>
+      </div>
+    </div>
+    <div class="p glass">
+      <div class="pt">&#x26A1; Quick Actions</div>
+      <div class="ax">
+        <button class="qb" onclick="sT()"><span class="e">&#x1F4CB;</span>New Task</button>
+        <button class="qb" onclick="sD()"><span class="e">&#x1F91D;</span>New Deal</button>
+        <button class="qb" onclick="refreshAll()"><span class="e">&#x27F3;</span>Refresh</button>
+        <button class="qb" onclick="window.open('/nyasha/','_blank')"><span class="e">&#x1F9EE;</span>Nyasha Tutor</button>
+      </div>
+      <div class="sp">
+        <div class="pt" style="margin-bottom:0.75rem">&#x1F4CA; Activity Pulse</div>
+        <div class="pch" id="pch"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:1rem;font-size:0.7rem;color:var(--t3);border-top:1px solid rgba(255,255,255,0.03)">
+    AI-BOS Mission Control v2.0 &middot; Built by Mathias Chekanyanza
+  </div>
+</div>
+
+<!-- Task Modal -->
+<div class="ov" id="tm">
+  <div class="mo glass">
+    <h2>&#x1F4CB; New Task</h2>
+    <input id="tiT" placeholder="Task title" />
+    <textarea id="tiD" placeholder="Description (optional)"></textarea>
+    <select id="tiP">
+      <option value="3">Priority: Medium (3)</option>
+      <option value="4">Priority: High (4)</option>
+      <option value="5" selected>Priority: Critical (5)</option>
+    </select>
+    <input id="tiDu" type="date" />
+    <div class="ma">
+      <button class="btn bs" onclick="h('tm')">Cancel</button>
+      <button class="btn bp" onclick="cT()">Create Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- Deal Modal -->
+<div class="ov" id="dm">
+  <div class="mo glass">
+    <h2>&#x1F91D; New Deal</h2>
+    <input id="diT" placeholder="Deal title" />
+    <input id="diC" placeholder="Client name" />
+    <input id="diV" type="number" placeholder="Value ($)" />
+    <select id="diS">
+      <option value="new">New</option>
+      <option value="active">Active</option>
+      <option value="stalled">Stalled</option>
+    </select>
+    <div class="ma">
+      <button class="btn bs" onclick="h('dm')">Cancel</button>
+      <button class="btn bp" onclick="cD()">Create Deal</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="tsc" id="tsc"></div>
+
+<script>
+const A='';
+let tasks=[];
+let deals=[];
+let aid=0;
+
+setInterval(()=>{
+  document.getElementById('liveTime').textContent=new Date().toLocaleString('en-ZW',{timeZone:'Africa/Harare',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+},1000);
+
+function toast(m){
+  const c=document.getElementById('tsc'),e=document.createElement('div');
+  e.className='toast';e.textContent=m;c.appendChild(e);
+  setTimeout(()=>e.remove(),3500);
+}
+
+function s(id){document.getElementById(id).classList.add('s')}
+function h(id){document.getElementById(id).classList.remove('s')}
+function sT(){s('tm')}
+function sD(){s('dm')}
+
+function addAct(type,text){
+  const c=document.getElementById('al'),e=document.createElement('div');
+  e.className='ai';
+  const m={sy:'sy',ts:'ts',fi:'fi',al:'al'};
+  e.innerHTML='<div class="ad '+m[type]+'"></div><span class="at">'+esc(text)+'</span><span class="atm">now</span>';
+  c.prepend(e);aid++;
+  while(c.children.length>12)c.removeChild(c.lastChild);
+}
+
+function fmt(d){
+  if(!d)return '';
+  return new Date(d).toLocaleDateString('en-ZW',{month:'short',day:'numeric'});
+}
+function od(d){return d&&new Date(d)<new Date(new Date().toDateString())}
+function td(d){if(!d)return false;const t=new Date(),n=new Date(d);return t.getFullYear()===n.getFullYear()&&t.getMonth()===n.getMonth()&&t.getDate()===n.getDate()}
+
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+const PRIO_LABELS={5:'CRITICAL',4:'HIGH',3:'MEDIUM'};
+
+function rT(tsk){
+  const c=document.getElementById('tl');
+  if(!tsk||!tsk.length){
+    c.innerHTML='<div class="emp"><div class="e2">&#x1F4CB;</div><p>No tasks yet. Create one!</p></div>';
+    return;
+  }
+  c.innerHTML=tsk.map(t=>{
+    const o=od(t.due_date)&&!t.done,tt=td(t.due_date)&&!t.done;
+    const p=t.priority||3;
+    return '<div class="ti" onclick="tT(\''+t.id+'\')">'+
+      '<div class="tc'+(t.done?' d':'')+'"></div>'+
+      '<div class="tco">'+
+        '<div class="tt'+(t.done?' dt':'')+'">'+esc(t.title)+
+          '<span class="tp p'+p+'">'+PRIO_LABELS[p]+'</span>'+
+        '</div>'+
+        (t.description?'<div class="tde">'+esc(t.description)+'</div>':'')+
+        (t.due_date&&!t.done?'<div class="tdu'+(o?' od':tt?' td':'')+'">Due '+fmt(t.due_date)+(o?' (overdue)':tt?' (today)':'')+'</div>':'')+
+      '</div></div>';
+  }).join('');
+}
+
+function rD(dl){
+  const c=document.getElementById('dl');
+  if(!dl||!dl.length){
+    c.innerHTML='<div class="emp"><div class="e2">&#x1F91D;</div><p>No deals yet.</p></div>';
+    return;
+  }
+  c.innerHTML='<table class="tw"><tr><th class="th">Deal</th><th class="th">Client</th><th class="th">Value</th><th class="th">Status</th></tr>'+
+    dl.map(d=>'<tr><td>'+esc(d.title)+'</td><td style="color:var(--t2)">'+esc(d.client||'\u2014')+'</td><td class="dv">$'+(d.value||0).toLocaleString()+'</td><td><span class="ds '+d.status+'">'+d.status+'</span></td></tr>').join('')+'</table>';
+}
+
+function upd(dash,ts){
+  const all=ts||tasks;
+  const o=all.filter(t=>!t.done).length;
+  const dn=all.filter(t=>t.done).length;
+  const tl=all.length;
+  const odc=all.filter(t=>!t.done&&od(t.due_date)).length;
+  const hp=all.filter(t=>!t.done&&(t.priority||0)>=4).length;
+
+  document.getElementById('sTk').textContent=o;
+  document.getElementById('sTkSub').textContent=hp+' high priority';
+  document.getElementById('sDl').textContent=dash.deals.total;
+  document.getElementById('sDlSub').textContent=dash.deals.stalled+' stalled';
+  document.getElementById('sRv').textContent='$'+(dash.revenue||0).toLocaleString();
+  document.getElementById('sRvSub').textContent='this month';
+  document.getElementById('sOd').textContent=odc;
+  document.getElementById('sOdSub').textContent=(dash.overdue_invoices||0)+' invoices';
+
+  const bn=document.getElementById('ob');
+  if(odc>0){
+    bn.classList.add('s');
+    document.getElementById('bnText').textContent='\u26A0\uFE0F '+odc+' overdue task'+(odc>1?'s':'')+' needing attention';
+  }else{bn.classList.remove('s');}
+
+  const pt=tl>0?Math.round(dn/tl*100):0;
+  document.getElementById('taskPct').style.width=pt+'%';
+  document.getElementById('progLbl').textContent=dn+'/'+tl+' complete';
+  document.getElementById('progPct').textContent=pt+'%';
+}
+
+function tT(id){
+  const t=tasks.find(x=>x.id===id);
+  if(!t)return;
+  const d=!t.done;
+  fetch(A+'/api/tasks/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({done:d})})
+    .then(r=>r.json()).then(()=>{
+      t.done=d;rT(tasks.filter(x=>!x.done));
+      fA();addAct(d?'ts':'ts',d?'Completed: '+t.title:'Reopened: '+t.title);
+      toast(d?'Task completed!':'Task reopened');
+    }).catch(()=>toast('Failed to update'));
+}
+
+function cT(){
+  const t=document.getElementById('tiT').value.trim();
+  if(!t){toast('Enter a title');return;}
+  fetch(A+'/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    title:t,
+    description:document.getElementById('tiD').value.trim(),
+    priority:parseInt(document.getElementById('tiP').value),
+    due_date:document.getElementById('tiDu').value||null
+  })}).then(r=>r.json()).then(()=>{
+    h('tm');
+    document.getElementById('tiT').value='';document.getElementById('tiD').value='';document.getElementById('tiDu').value='';
+    fA();addAct('ts','Created: '+t);toast('Task created!');
+  }).catch(()=>toast('Failed to create'));
+}
+
+function cD(){
+  const t=document.getElementById('diT').value.trim();
+  if(!t){toast('Enter a deal title');return;}
+  fetch(A+'/api/deals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    title:t,
+    client:document.getElementById('diC').value.trim(),
+    value:parseFloat(document.getElementById('diV').value)||0,
+    status:document.getElementById('diS').value
+  })}).then(r=>r.json()).then(()=>{
+    h('dm');
+    document.getElementById('diT').value='';document.getElementById('diC').value='';document.getElementById('diV').value='';
+    fA();addAct('fi','Added deal: '+t);toast('Deal created!');
+  }).catch(()=>toast('Failed to create'));
+}
+
+function renderPulse(){
+  const c=document.getElementById('pch');
+  const h=7;
+  const labels=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vals=labels.map(()=>Math.floor(Math.random()*60+10));
+  c.innerHTML=vals.map((v,i)=>'<div style="flex:1;text-align:center"><div class="pb" style="height:'+v+'px" title="'+v+' actions"></div><div class="pbl">'+labels[i]+'</div></div>').join('');
+}
+
+function fA(){
+  fetch(A+'/api/dashboard').then(r=>r.json()).then(d=>{
+    fetch(A+'/api/tasks').then(r=>r.json()).then(tr=>{
+      tasks=tr.tasks||tr||[];
+      const o=tasks.filter(t=>!t.done&&od(t.due_date)).length;
+      upd(d,tasks);
+      rT(tasks.filter(t=>!t.done));
+      document.getElementById('gwSt').innerHTML='\u25CF Online';
+    });
+  }).catch(()=>{});
+  fetch(A+'/api/deals').then(r=>r.json()).then(dr=>{
+    deals=dr.deals||[];
+    rD(deals);
+  }).catch(()=>{});
+}
+
+function refreshAll(){
+  toast('Refreshing data...');
+  fA();
+  renderPulse();
+}
+
+// Init
+fA();
+renderPulse();
+addAct('sy','Mission Control dashboard loaded');
+</script>
 </body>
 </html>
