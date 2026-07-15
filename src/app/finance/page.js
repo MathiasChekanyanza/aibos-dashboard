@@ -10,14 +10,14 @@ export default function FinancePage() {
     fetch('/api/finance').then(r => r.json()).then(d => { setFinance(d); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
-  if (loading) return <PageShell><div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div></PageShell>;
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>;
 
   const invoices = finance?.invoices || [];
   const summary = finance?.summary || {};
   const overdue = invoices.filter(i => i.status === 'overdue' || (i.status !== 'paid' && i.dueDate && new Date(i.dueDate) < new Date()));
 
   return (
-    <PageShell>
+    <div className="p-6 lg:p-8">
       <div className="flex items-start justify-between mb-8">
         <div>
           <h2 className="text-2xl font-bold">Finance</h2>
@@ -82,37 +82,10 @@ export default function FinancePage() {
                 </td>
               </tr>
             ))}
+            {invoices.length === 0 && <tr><td colSpan="7" className="text-center py-8 text-sm text-gray-500">No invoices yet.</td></tr>}
           </tbody>
         </table>
-        {invoices.length === 0 && <p className="text-center py-8 text-sm text-gray-500">No invoices yet.</p>}
       </div>
-    </PageShell>
-  );
-}
-
-function PageShell({ children }) {
-  return (
-    <div className="flex h-screen bg-[#0f0f1a] overflow-hidden">
-      <aside className="w-56 bg-[#181825]/60 border-r border-[#2a2a3e]/50 flex flex-col">
-        <div className="p-5 border-b border-[#2a2a3e]/40">
-          <h1 className="text-lg font-bold"><span className="text-blue-400">AI</span>·<span className="text-gray-300">BOS</span></h1>
-          <p className="text-[10px] text-[#606078] uppercase tracking-widest mt-0.5">Command Center v2</p>
-        </div>
-        <nav className="flex-1 p-3 space-y-1">
-          {[{id:'dashboard',icon:'◉',label:'Dashboard'},{id:'pipeline',icon:'▦',label:'Pipeline'},{id:'crm',icon:'◎',label:'CRM / Deals'},
-            {id:'finance',icon:'₿',label:'Finance'},{id:'tasks',icon:'☰',label:'Tasks'},{id:'agents',icon:'◆',label:'Agents'},{id:'settings',icon:'⚙',label:'Settings'}].map(item => (
-            <a key={item.id} href={item.id === 'dashboard' ? '/' : `/${item.id}`}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${
-                item.id === 'finance' ? 'bg-gradient-to-r from-blue-500/10 to-transparent text-blue-400 border-l-2 border-blue-500'
-                : 'text-[#707088] hover:text-white hover:bg-[#1e1e30]'
-              }`}><span className="w-5 text-center text-base">{item.icon}</span><span>{item.label}</span></a>
-          ))}
-        </nav>
-        <div className="p-4 border-t border-[#2a2a3e]/40">
-          <span className="flex items-center gap-1.5 text-xs text-[#606078]"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>System Online v2.0.0</span>
-        </div>
-      </aside>
-      <main className="flex-1 overflow-y-auto p-6 lg:p-8">{children}</main>
     </div>
   );
 }
