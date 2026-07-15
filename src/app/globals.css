@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #0f0f1a;
+  --bg-secondary: #181825;
+  --bg-card: #1e1e30;
+  --border: #2a2a3e;
+  --text-primary: #e8e8f0;
+  --text-muted: #9090a8;
+  --accent: #3b82f6;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a3e #0f0f1a;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.glass {
+  background: rgba(24, 24, 37, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(42, 42, 62, 0.5);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(30, 30, 48, 0.9), rgba(24, 24, 37, 0.7));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(42, 42, 62, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.active { background: #22c55e; box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+.status-dot.idle { background: #eab308; box-shadow: 0 0 8px rgba(234, 179, 8, 0.3); }
+.status-dot.offline { background: #6b7280; }
+
+.pipeline-bar { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
