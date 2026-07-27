@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
-import { readStore } from '@/lib/store';
+import { getRecentActivity } from '@/lib/store';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const activity = readStore('activity') || [];
-  return NextResponse.json({ activity, total: activity.length });
+  try {
+    const activity = await getRecentActivity(50);
+    return NextResponse.json({ activity, total: activity.length });
+  } catch (e) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
 }

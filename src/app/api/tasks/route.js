@@ -1,27 +1,33 @@
 import { NextResponse } from 'next/server';
-import { readStore, writeStore, computeDashboard } from '@/lib/store';
+import { getAllTasks, createTask, updateTaskStatus } from '@/lib/store';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const tasks = readStore('tasks') || [];
-  return NextResponse.json({ tasks, total: tasks.length });
+  try {
+    const tasks = await getAllTasks();
+    return NextResponse.json({ tasks, total: tasks.length });
+  } catch (e) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
 }
 
 export async function POST(req) {
-  const body = await req.json();
-  const tasks = readStore('tasks') || [];
-  const task = {
-    id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
-    title: body.title || 'Untitled',
-    description: body.description || '',
-    priority: body.priority || 'medium',
-    status: body.status || 'open',
-    assignee: body.assignee || '',
-    dueDate: body.dueDate || null,
-    createdAt: new Date().toISOString()
-  };
-  tasks.push(task);
-  writeStore('tasks', tasks);
-  return NextResponse.json(task, { status: 201 });
+  try {
+    const body = await req.json();
+    const task = await createTask(body);
+    return NextResponse.json(task, { status: 201 });
+  } catch (e) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(req) {
+  try {
+    const { id, status } = await req.json();
+    const task = await updateTaskStatus(id, status);
+    return NextResponse.json(task);
+  } catch (e) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
 }

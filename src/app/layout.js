@@ -1,6 +1,6 @@
 // Shared Layout with Sidebar for AI-BOS Command Center
-import Sidebar from '@/components/Sidebar';
 import './globals.css';
+import Sidebar from '@/components/Sidebar';
 
 export default function RootLayout({ children }) {
   return (

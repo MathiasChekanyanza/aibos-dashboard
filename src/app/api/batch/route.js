@@ -1,9 +1,20 @@
 import { NextResponse } from 'next/server';
-import { readStore, computeDashboard } from '@/lib/store';
+import { computeDashboard, getAllDeals, getAllTasks, getAllInvoices, getRecentActivity, getAllClients } from '@/lib/store';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const dash = computeDashboard();
-  return NextResponse.json(dash);
+  try {
+    const [dash, deals, tasks, invoices, activity, clients] = await Promise.all([
+      computeDashboard(),
+      getAllDeals(),
+      getAllTasks(),
+      getAllInvoices(),
+      getRecentActivity(10),
+      getAllClients(),
+    ]);
+    return NextResponse.json({ dash, deals, tasks, invoices, activity, clients });
+  } catch (e) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
 }
